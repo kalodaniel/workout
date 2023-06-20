@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bejelentkezés</title>
+  <style>
+
+html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("workout.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 40px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 100px;
+    }
+    
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .container label,
+    .container input[type="text"],
+    .container input[type="password"],
+    .container input[type="submit"],
+    .container input[type="button"] {
+      display: block;
+      width: 100%;
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    
+    .container input[type="submit"],
+    .container input[type="button"] {
+      background-color: orange;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .container input[type="submit"]:hover,
+    .container input[type="button"]:hover {
+      background-color: darkorange;
+    }
+  </style>
+  <script>
+    function validateForm() {
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+
+      if (username === "gyuras" && password === "alexpunci") {
+        window.location.href = "mainPage.html";
+      } else {
+        alert("Helytelen felhasználónév vagy jelszó!");
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>GYÚRÓGÉP 2000</h2>
+    <form>
+      <label for="username">Felhasználónév:</label>
+      <input type="text" id="username" name="username" required>
+      
+      <label for="password">Jelszó:</label>
+      <input type="password" id="password" name="password" required>
+      
+      <input type="button" value="Bejelentkezés" onclick="validateForm()">
+    </form>
+  </div>
+</body>
+</html>

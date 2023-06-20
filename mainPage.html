@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Főoldal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-image: url("workout.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    h2 {
+      text-align: center;
+    }
+    
+    select {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    button {
+      background-color: orange;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: darkorange;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Mire edzünk ma?</h2>
+    <select id="options">
+      <option value="" disabled selected>Válasszon egy lehetőséget</option>
+      <option value="breast">Mell - Váll - Tricepsz</option>
+      <option value="back">Hát - Bicepsz</option>
+      <option value="legs">Comb - Vádli</option>
+    </select>
+    <button onclick="navigate()">Tovább</button>
+  </div>
+
+  <script>
+    function navigate() {
+      var selectedOption = document.getElementById("options").value;
+
+      if (selectedOption === "breast") {
+        window.location.href = "breast.html";
+      } else if (selectedOption === "back") {
+        window.location.href = "back.html";
+      } else if (selectedOption === "legs") {
+        window.location.href = "legs.html";
+      } else {
+        alert("Válasszon egy lehetőséget!");
+      }
+    }
+  </script>
+</body>
+</html>

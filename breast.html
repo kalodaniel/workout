@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mell - Váll - Tricepsz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+    }
+    
+    td[contenteditable="true"] {
+      background-color: #fff;
+    }
+    
+    .green {
+      background-color: green;
+    }
+    
+    .yellow {
+      background-color: yellow;
+    }
+    
+    .red {
+      background-color: red;
+    }
+    
+    .delete-icon {
+      cursor: pointer;
+    }
+    
+    button {
+      background-color: orange;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: darkorange;
+    }
+  </style>
+</head>
+<body>
+  <h2>Mell - Váll - Tricepsz</h2>
+  
+  <table>
+    <tr>
+      <th>Gyakorlat</th>
+      <th>Súly (kg)</th>
+      <th>Ismétlésszám</th>
+      <th>Pihenő (perc)</th>
+      <th>Nehézség</th>
+      <th>Törlés</th>
+    </tr>
+  </table>
+  
+  <button onclick="addRow()">Új Sor</button>
+  <button onclick="saveData()">Mentés</button>
+
+  <script>
+    function saveData() {
+      var table = document.querySelector("table");
+      var rows = table.rows;
+      var data = [];
+      
+      for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].cells;
+        var rowData = [];
+        
+        for (var j = 0; j < cells.length - 2; j++) {
+          rowData.push(cells[j].textContent.trim());
+        }
+        
+        rowData.push(cells[4].getAttribute("data-value")); // Nehézség érték hozzáadása
+        data.push(rowData);
+      }
+      
+      var csvContent = "data:text/csv;charset=utf-8,";
+      data.forEach(function(row) {
+        csvContent += row.join(";") + "\r\n"; // Pontosvessző elválasztás
+      });
+      
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "breast.csv");
+      document.body.appendChild(link);
+      
+      link.click();
+      
+      document.body.removeChild(link);
+    }
+    
+    function addRow() {
+      var table = document.querySelector("table");
+      var row = table.insertRow(-1);
+      
+      var cells = [];
+      for (var i = 0; i < 6; i++) {
+        cells.push(row.insertCell(i));
+      }
+      
+      cells[0].contentEditable = true;
+      cells[0].textContent = "-";
+      cells[1].contentEditable = true;
+      cells[1].textContent = "-";
+      cells[2].contentEditable = true;
+      cells[2].textContent = "-";
+      cells[3].contentEditable = true;
+      cells[3].textContent = "-";
+      
+      var difficultyCell = cells[4];
+      difficultyCell.className = "green";
+      difficultyCell.setAttribute("data-value", "Könnyű");
+      difficultyCell.addEventListener("click", function() {
+        toggleDifficulty(this);
+      });
+      
+      var deleteCell = cells[5];
+      deleteCell.className = "delete-icon";
+      deleteCell.innerHTML = "&#128465;";
+      deleteCell.addEventListener("click", function() {
+        deleteRow(this);
+      });
+    }
+    
+    function toggleDifficulty(cell) {
+      if (cell.classList.contains("green")) {
+        cell.classList.remove("green");
+        cell.classList.add("yellow");
+        cell.setAttribute("data-value", "Közepes");
+        cell.textContent = "Közepes";
+      } else if (cell.classList.contains("yellow")) {
+        cell.classList.remove("yellow");
+        cell.classList.add("red");
+        cell.setAttribute("data-value", "Nehéz");
+        cell.textContent = "Nehéz";
+      } else if (cell.classList.contains("red")) {
+        cell.classList.remove("red");
+        cell.classList.add("green");
+        cell.setAttribute("data-value", "Könnyű");
+        cell.textContent = "Könnyű";
+      }
+    }
+    
+    function deleteRow(cell) {
+      var row = cell.parentNode;
+      var table = row.parentNode;
+      table.deleteRow(row.rowIndex);
+    }
+    
+    function loadTableData() {
+      fetch("breast.csv")
+        .then(response => response.text())
+        .then(data => {
+          var rowsData = data.split("\n");
+          var table = document.querySelector("table");
+          
+          for (var i = 1; i < rowsData.length; i++) {
+            var rowData = rowsData[i].split(";");
+            if (rowData.length === 5) {
+              var row = table.insertRow(-1);
+              
+              var cells = [];
+              for (var j = 0; j < 6; j++) {
+                cells.push(row.insertCell(j));
+              }
+              
+              cells[0].contentEditable = true;
+              cells[0].textContent = rowData[0];
+              cells[1].contentEditable = true;
+              cells[1].textContent = rowData[1];
+              cells[2].contentEditable = true;
+              cells[2].textContent = rowData[2];
+              cells[3].contentEditable = true;
+              cells[3].textContent = rowData[3];
+              
+              var difficultyCell = cells[4];
+              difficultyCell.className = rowData[4].toLowerCase();
+              difficultyCell.setAttribute("data-value", rowData[4]);
+              difficultyCell.textContent = rowData[4];
+              difficultyCell.addEventListener("click", function() {
+                toggleDifficulty(this);
+              });
+              
+              var deleteCell = cells[5];
+              deleteCell.className = "delete-icon";
+              deleteCell.innerHTML = "&#128465;";
+              deleteCell.addEventListener("click", function() {
+                deleteRow(this);
+              });
+            }
+          }
+        })
+        .catch(error => {
+          console.error("Hiba a táblázat adatok betöltésekor:", error);
+        });
+    }
+    
+    loadTableData();
+  </script>
+</body>
+</html>
